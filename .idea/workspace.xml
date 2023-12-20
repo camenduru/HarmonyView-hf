@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a993d736-6297-4164-9c29-6b2ab1055a96" name="변경" comment="error resolve">
+      <change afterPath="$PROJECT_DIR$/.idea/HarmonyView.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/crop_size.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/elevation.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/teaser.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ckpt/ViT-L-14.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ckpt/sam_vit_h_4b8939.pth" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ckpt/syncdreamer-pretrain.ckpt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/nerf.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/neus.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/syncdreamer-train.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/syncdreamer.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/monkey.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/generate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hf_demo/examples/basket.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hf_demo/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/base_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/dummy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/imagenet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/inpainting/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/inpainting/synthetic_mask.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/laion.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/lsun.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/nerf_like.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/simple.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/data/sync_dreamer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/lr_scheduler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/models/autoencoder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/models/diffusion/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/models/diffusion/sync_dreamer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/models/diffusion/sync_dreamer_attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/models/diffusion/sync_dreamer_network.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/models/diffusion/sync_dreamer_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/diffusionmodules/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/diffusionmodules/model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/diffusionmodules/openaimodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/diffusionmodules/util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/distributions/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/distributions/distributions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/encoders/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/encoders/modules.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/modules/x_transformer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/thirdp/psp/helpers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/thirdp/psp/id_loss.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/thirdp/psp/model_irse.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ldm/util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/meta_info/camera-16.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sam_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="SOFT" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2ZnW6K1fbjXifGRmEwLC1IeZfLw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/byeongjun/PycharmProjects/HarmonyView&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-7a29c1521ef0-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.298" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="a993d736-6297-4164-9c29-6b2ab1055a96" name="변경" comment="" />
+      <created>1703058146297</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1703058146297</updated>
+      <workItem from="1703058147338" duration="769000" />
+    </task>
+    <task id="LOCAL-00001" summary="error resolve">
+      <option name="closed" value="true" />
+      <created>1703061021882</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1703061021882</updated>
+    </task>
+    <task id="LOCAL-00002" summary="error resolve">
+      <option name="closed" value="true" />
+      <created>1703061313767</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1703061313767</updated>
+    </task>
+    <task id="LOCAL-00003" summary="error resolve">
+      <option name="closed" value="true" />
+      <created>1703061463083</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1703061463083</updated>
+    </task>
+    <task id="LOCAL-00004" summary="error resolve">
+      <option name="closed" value="true" />
+      <created>1703061493135</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1703061493135</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="error resolve" />
+    <option name="LAST_COMMIT_MESSAGE" value="error resolve" />
+  </component>
+</project>

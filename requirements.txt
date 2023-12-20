@@ -1,0 +1,24 @@
+--extra-index-url https://download.pytorch.org/whl/cu113
+torch
+pytorch_lightning==1.9.0
+Pillow==10.0.0
+opencv-python
+transformers
+taming-transformers-rom1504 
+tqdm
+numpy
+kornia
+webdataset
+omegaconf
+einops
+scikit-image
+pymcubes
+carvekit-colab
+open3d
+trimesh
+easydict
+nerfacc
+imageio-ffmpeg==0.4.7
+fire
+segment_anything
+git+https://github.com/openai/CLIP.git
