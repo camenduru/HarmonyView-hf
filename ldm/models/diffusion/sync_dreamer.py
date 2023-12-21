@@ -110,6 +110,7 @@ class UNetWrapper(nn.Module):
             v_[k] = torch.cat([v, torch.zeros_like(v)], 0)
 
         x_concat_ = torch.cat([x_concat, torch.zeros_like(x_concat)], 0)
+
         if self.use_zero_123:
             # zero123 does not multiply this when encoding, maybe a bug for zero123
             first_stage_scale_factor = 0.18215
@@ -119,6 +120,24 @@ class UNetWrapper(nn.Module):
         s = s_uc + unconditional_scale * (s - s_uc)
         return s
 
+    def predict_with_decomposed_unconditional_scales(self, x, t, clip_embed, volume_feats, x_concat, unconditional_scales):
+        x_ = torch.cat([x] * 3, 0)
+        t_ = torch.cat([t] * 3, 0)
+        clip_embed_ = torch.cat([clip_embed, torch.zeros_like(clip_embed), clip_embed], 0)
+        x_concat_ = torch.cat([x_concat, torch.zeros_like(x_concat), x_concat*4], 0)
+
+        v_ = {}
+        for k, v in volume_feats.items():
+            v_[k] = torch.cat([v, v, torch.zeros_like(v)], 0)
+
+        if self.use_zero_123:
+            # zero123 does not multiply this when encoding, maybe a bug for zero123
+            first_stage_scale_factor = 0.18215
+            x_concat_[:, :4] = x_concat_[:, :4] / first_stage_scale_factor
+        x_ = torch.cat([x_, x_concat_], 1)
+        s, s_uc1, s_uc2 = self.diffusion_model(x_, t_, clip_embed_, source_dict=v_).chunk(3)
+        s = s + unconditional_scales[0] * (s - s_uc1) + unconditional_scales[1] * (s - s_uc2)
+        return s
 
 class SpatialVolumeNet(nn.Module):
     def __init__(self, time_dim, view_dim, view_num,
@@ -156,13 +175,12 @@ class SpatialVolumeNet(nn.Module):
         device = x.device
 
         spatial_volume_verts = torch.linspace(-self.spatial_volume_length, self.spatial_volume_length, V, dtype=torch.float32, device=device)
-        spatial_volume_verts = torch.stack(torch.meshgrid(spatial_volume_verts, spatial_volume_verts, spatial_volume_verts), -1)
+        spatial_volume_verts = torch.stack(torch.meshgrid(spatial_volume_verts, spatial_volume_verts, spatial_volume_verts, indexing='ij'), -1)
         spatial_volume_verts = spatial_volume_verts.reshape(1, V ** 3, 3)[:, :, (2, 1, 0)]
         spatial_volume_verts = spatial_volume_verts.view(1, V, V, V, 3).permute(0, 4, 1, 2, 3).repeat(B, 1, 1, 1, 1)
 
         # encode source features
         t_embed_ = t_embed.view(B, 1, self.time_dim).repeat(1, N, 1).view(B, N, self.time_dim)
-        # v_embed_ = v_embed.view(1, N, self.view_dim).repeat(B, 1, 1).view(B, N, self.view_dim)
         v_embed_ = v_embed
         target_Ks = target_Ks.unsqueeze(0).repeat(B, 1, 1, 1)
         target_poses = target_poses.unsqueeze(0).repeat(B, 1, 1, 1)
@@ -227,7 +245,8 @@ class SyncMultiviewDiffusion(pl.LightningModule):
                  view_num=16, image_size=256,
                  cfg_scale=3.0, output_num=8, batch_view_num=4,
                  drop_conditions=False, drop_scheme='default',
-                 clip_image_encoder_path="/apdcephfs/private_rondyliu/projects/clip/ViT-L-14.pt"):
+                 clip_image_encoder_path="/apdcephfs/private_rondyliu/projects/clip/ViT-L-14.pt",
+                 sample_type='ddim', sample_steps=200):
         super().__init__()
 
         self.finetune_unet = finetune_unet
@@ -255,7 +274,10 @@ class SyncMultiviewDiffusion(pl.LightningModule):
         self.scheduler_config = scheduler_config
 
         latent_size = image_size//8
-        self.ddim = SyncDDIMSampler(self, 200, "uniform", 1.0, latent_size=latent_size)
+        if sample_type=='ddim':
+            self.sampler = SyncDDIMSampler(self, sample_steps , "uniform", 1.0, latent_size=latent_size)
+        else:
+            raise NotImplementedError
 
     def _init_clip_projection(self):
         self.cc_projection = nn.Linear(772, 768)
@@ -468,9 +490,9 @@ class SyncMultiviewDiffusion(pl.LightningModule):
         x_noisy = sqrt_alphas_cumprod_ * x_start + sqrt_one_minus_alphas_cumprod_ * noise
         return x_noisy, noise
 
-    def sample(self, sampler, batch, cfg_scale, batch_view_num, return_inter_results=False, inter_interval=50, inter_view_interval=2):
+    def sample(self, sampler, batch, cfg_scale, return_inter_results=False, inter_interval=50, inter_view_interval=2):
         _, clip_embed, input_info = self.prepare(batch)
-        x_sample, inter = sampler.sample(input_info, clip_embed, unconditional_scale=cfg_scale, log_every_t=inter_interval, batch_view_num=batch_view_num)
+        x_sample, inter = sampler.sample(input_info, clip_embed, unconditional_scale=cfg_scale, log_every_t=inter_interval)
 
         N = x_sample.shape[1]
         x_sample = torch.stack([self.decode_first_stage(x_sample[:, ni]) for ni in range(N)], 1)
@@ -509,7 +531,7 @@ class SyncMultiviewDiffusion(pl.LightningModule):
             step = self.global_step
             batch_ = {}
             for k, v in batch.items(): batch_[k] = v[:self.output_num]
-            x_sample = self.sample(batch_, self.cfg_scale, self.batch_view_num)
+            x_sample = self.sample(self.sampler, batch_, self.cfg_scale)
             output_dir = Path(self.image_dir) / 'images' / 'val'
             output_dir.mkdir(exist_ok=True, parents=True)
             self.log_image(x_sample, batch, step, output_dir=output_dir)
@@ -588,7 +610,7 @@ class SyncDDIMSampler:
         return x_prev
 
     @torch.no_grad()
-    def denoise_apply(self, x_target_noisy, input_info, clip_embed, time_steps, index, unconditional_scale, batch_view_num=1, is_step0=False):
+    def denoise_apply(self, x_target_noisy, input_info, clip_embed, time_steps, index, unconditional_scale, is_step0=False):
         """
         @param x_target_noisy:   B,N,4,H,W
         @param input_info:
@@ -596,7 +618,6 @@ class SyncDDIMSampler:
         @param time_steps:       B,
         @param index:            int
         @param unconditional_scale:
-        @param batch_view_num:   int
         @param is_step0:         bool
         @return:
         """
@@ -608,37 +629,34 @@ class SyncDDIMSampler:
         t_embed = self.model.embed_time(time_steps)  # B,t_dim
         spatial_volume = self.model.spatial_volume.construct_spatial_volume(x_target_noisy, t_embed, v_embed, self.model.poses, self.model.Ks)
 
-        e_t = []
-        target_indices = torch.arange(N) # N
-        for ni in range(0, N, batch_view_num):
-            x_target_noisy_ = x_target_noisy[:, ni:ni + batch_view_num]
-            VN = x_target_noisy_.shape[1]
-            x_target_noisy_ = x_target_noisy_.reshape(B*VN,C,H,W)
+        target_indices_ = torch.arange(N).unsqueeze(0).repeat(B, 1)
+        x_target_noisy_ = x_target_noisy.reshape(B*N,C,H,W)
 
-            time_steps_ = repeat_to_batch(time_steps, B, VN)
-            target_indices_ = target_indices[ni:ni+batch_view_num].unsqueeze(0).repeat(B,1)
-            clip_embed_, volume_feats_, x_concat_ = self.model.get_target_view_feats(x_input, spatial_volume, clip_embed, t_embed, v_embed, target_indices_)
-            if unconditional_scale!=1.0:
+        time_steps_ = repeat_to_batch(time_steps, B, N)
+        clip_embed_, volume_feats_, x_concat_ = self.model.get_target_view_feats(x_input, spatial_volume, clip_embed, t_embed, v_embed, target_indices_)
+
+        if type(unconditional_scale) == float: ## CFG
+            if unconditional_scale != 1.0:
                 noise = self.model.model.predict_with_unconditional_scale(x_target_noisy_, time_steps_, clip_embed_, volume_feats_, x_concat_, unconditional_scale)
             else:
                 noise = self.model.model(x_target_noisy_, time_steps_, clip_embed_, volume_feats_, x_concat_, is_train=False)
-            e_t.append(noise.view(B,VN,4,H,W))
+        else: ## DG
+            noise = self.model.model.predict_with_decomposed_unconditional_scales(x_target_noisy_, time_steps_, clip_embed_, volume_feats_, x_concat_, unconditional_scale)
 
-        e_t = torch.cat(e_t, 1)
-        x_prev = self.denoise_apply_impl(x_target_noisy, index, e_t, is_step0)
+        noise = noise.reshape(B, N, 4, H, W)
+        x_prev = self.denoise_apply_impl(x_target_noisy, index, noise, is_step0)
         return x_prev
 
     @torch.no_grad()
-    def sample(self, input_info, clip_embed, unconditional_scale=1.0, log_every_t=50, batch_view_num=1):
+    def sample(self, input_info, clip_embed, unconditional_scale, log_every_t=50):
         """
         @param input_info:      x, elevation
         @param clip_embed:      B,M,768
         @param unconditional_scale:
         @param log_every_t:
-        @param batch_view_num:
         @return:
         """
-        print(f"unconditional scale {unconditional_scale:.1f}")
+
         C, H, W = 4, self.latent_size, self.latent_size
         B = clip_embed.shape[0]
         N = self.model.view_num
@@ -654,7 +672,7 @@ class SyncDDIMSampler:
         for i, step in enumerate(iterator):
             index = total_steps - i - 1 # index in ddim state
             time_steps = torch.full((B,), step, device=device, dtype=torch.long)
-            x_target_noisy = self.denoise_apply(x_target_noisy, input_info, clip_embed, time_steps, index, unconditional_scale, batch_view_num=batch_view_num, is_step0=index==0)
+            x_target_noisy = self.denoise_apply(x_target_noisy, input_info, clip_embed, time_steps, index, unconditional_scale, is_step0=index==0)
             if index % log_every_t == 0 or index == total_steps - 1:
                 intermediates['x_inter'].append(x_target_noisy)
 

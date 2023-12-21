@@ -79,7 +79,7 @@ def resize_inputs(image_input, crop_size):
     results = add_margin(ref_img_, size=256)
     return results
 
-def generate(model, sample_steps, batch_view_num, sample_num, cfg_scale, seed, image_input, elevation_input):
+def generate(model, sample_steps, batch_view_num, sample_num, cfg_scale_1, cfg_scale_2, seed, image_input, elevation_input):
     if deployed:
         assert isinstance(model, SyncMultiviewDiffusion)
         seed=int(seed)
@@ -104,7 +104,7 @@ def generate(model, sample_steps, batch_view_num, sample_num, cfg_scale, seed, i
 
         if deployed:
             sampler = SyncDDIMSampler(model, sample_steps)
-            x_sample = model.sample(sampler, data, cfg_scale, batch_view_num)
+            x_sample = model.sample(sampler, data, (cfg_scale_1, cfg_scale_2), batch_view_num)
         else:
             x_sample = torch.zeros(sample_num, 16, 3, 256, 256)
 
@@ -225,7 +225,8 @@ def run_demo():
                 input_block = gr.Image(type='pil', image_mode='RGBA', label="Input to SyncDreamer", height=256, interactive=False)
                 elevation.render()
                 with gr.Accordion('Advanced options', open=False):
-                    cfg_scale = gr.Slider(1.0, 5.0, 2.0, step=0.1, label='Classifier free guidance', interactive=True)
+                    cfg_scale_1 = gr.Slider(1.0, 5.0, 2.0, step=0.1, label='Classifier free guidance', interactive=True)
+                    cfg_scale_2 = gr.Slider(0.5, 1.5, 1.0, step=0.1, label='Classifier free guidance', interactive=True)
                     sample_num = gr.Slider(1, 2, 1, step=1, label='Sample num', interactive=False, info='How many instance (16 images per instance)')
                     sample_steps = gr.Slider(10, 300, 50, step=10, label='Sample steps', interactive=False)
                     batch_view_num = gr.Slider(1, 16, 16, step=1, label='Batch num', interactive=True)
@@ -252,7 +253,7 @@ def run_demo():
         # crop_btn.click(fn=resize_inputs, inputs=[sam_block, crop_size], outputs=[input_block], queue=False)\
         #                .success(fn=partial(update_guide, _USER_GUIDE2), outputs=[guide_text], queue=False)
 
-        run_btn.click(partial(generate, model), inputs=[sample_steps, batch_view_num, sample_num, cfg_scale, seed, input_block, elevation], outputs=[output_block], queue=True)\
+        run_btn.click(partial(generate, model), inputs=[sample_steps, batch_view_num, sample_num, cfg_scale_1, cfg_scale_2, seed, input_block, elevation], outputs=[output_block], queue=True)\
                .success(fn=partial(update_guide, _USER_GUIDE3), outputs=[guide_text], queue=False)
 
     demo.queue().launch(share=False, max_threads=80)  # auth=("admin", os.environ['PASSWD'])
