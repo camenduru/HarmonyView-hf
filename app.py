@@ -225,8 +225,8 @@ def run_demo():
                 input_block = gr.Image(type='pil', image_mode='RGBA', label="Input to SyncDreamer", height=256, interactive=False)
                 elevation.render()
                 with gr.Accordion('Advanced options', open=False):
-                    cfg_scale_1 = gr.Slider(1.0, 5.0, 2.0, step=0.1, label='Classifier free guidance', interactive=True)
-                    cfg_scale_2 = gr.Slider(0.5, 1.5, 1.0, step=0.1, label='Classifier free guidance', interactive=True)
+                    cfg_scale_1 = gr.Slider(1.0, 5.0, 2.0, step=0.1, label='Classifier free guidance 1', interactive=True)
+                    cfg_scale_2 = gr.Slider(0.5, 1.5, 1.0, step=0.1, label='Classifier free guidance 2', interactive=True)
                     sample_num = gr.Slider(1, 2, 1, step=1, label='Sample num', interactive=False, info='How many instance (16 images per instance)')
                     sample_steps = gr.Slider(10, 300, 50, step=10, label='Sample steps', interactive=False)
                     batch_view_num = gr.Slider(1, 16, 16, step=1, label='Batch num', interactive=True)
