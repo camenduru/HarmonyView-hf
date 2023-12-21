@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a993d736-6297-4164-9c29-6b2ab1055a96" name="변경" comment="change title">
+    <list default="true" id="a993d736-6297-4164-9c29-6b2ab1055a96" name="변경" comment="HarmonyView update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ldm/models/diffusion/sync_dreamer.py" beforeDir="false" afterPath="$PROJECT_DIR$/ldm/models/diffusion/sync_dreamer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +33,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/byeongjun/PycharmProjects/cvpr2024"
+    "last_opened_file_path": "/home/byeongjun/SyncDreamer"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -115,7 +114,23 @@
       <option name="project" value="LOCAL" />
       <updated>1703070569206</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="HarmonyView update">
+      <option name="closed" value="true" />
+      <created>1703130677065</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1703130677065</updated>
+    </task>
+    <task id="LOCAL-00009" summary="HarmonyView update">
+      <option name="closed" value="true" />
+      <created>1703131488938</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1703131488938</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -133,6 +148,7 @@
     <MESSAGE value="error resolve" />
     <MESSAGE value="add example code" />
     <MESSAGE value="change title" />
-    <option name="LAST_COMMIT_MESSAGE" value="change title" />
+    <MESSAGE value="HarmonyView update" />
+    <option name="LAST_COMMIT_MESSAGE" value="HarmonyView update" />
   </component>
 </project>

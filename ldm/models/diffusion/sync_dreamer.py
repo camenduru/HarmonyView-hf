@@ -468,7 +468,7 @@ class SyncMultiviewDiffusion(pl.LightningModule):
         x_noisy = sqrt_alphas_cumprod_ * x_start + sqrt_one_minus_alphas_cumprod_ * noise
         return x_noisy, noise
 
-    def sample(self, sampler, batch, cfg_scale_1, cfg_scale_2, batch_view_num, return_inter_results=False, inter_interval=50, inter_view_interval=2):
+    def sample(self, sampler, batch, cfg_scale, batch_view_num, return_inter_results=False, inter_interval=50, inter_view_interval=2):
         _, clip_embed, input_info = self.prepare(batch)
         x_sample, inter = sampler.sample(input_info, clip_embed, unconditional_scale=cfg_scale, log_every_t=inter_interval, batch_view_num=batch_view_num)
 
@@ -626,7 +626,7 @@ class SyncDDIMSampler:
         return x_prev
 
     @torch.no_grad()
-    def sample(self, input_info, clip_embed, unconditional_scale=1.0, log_every_t=50, batch_view_num=1):
+    def sample(self, input_info, clip_embed, unconditional_scale, log_every_t=50, batch_view_num=1):
         """
         @param input_info:      x, elevation
         @param clip_embed:      B,M,768
