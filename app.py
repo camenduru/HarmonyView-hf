@@ -256,7 +256,7 @@ def run_demo():
         run_btn.click(partial(generate, model), inputs=[sample_steps, batch_view_num, sample_num, cfg_scale_1, cfg_scale_2, seed, input_block, elevation], outputs=[output_block], queue=True)\
                .success(fn=partial(update_guide, _USER_GUIDE3), outputs=[guide_text], queue=False)
 
-    demo.queue().launch(share=False, max_threads=80)  # auth=("admin", os.environ['PASSWD'])
+    demo.queue().launch(share=True, max_threads=80)  # auth=("admin", os.environ['PASSWD'])
 
 if __name__=="__main__":
     fire.Fire(run_demo)
